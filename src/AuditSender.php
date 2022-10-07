@@ -34,7 +34,7 @@ class AuditSender
     {
         /** @var Resolver $resolver */
         $resolver = config('audit-tm.user_id_resolver');
-        return $resolver::resolve();
+        return $resolver ? $resolver::resolve() : null;
     }
 
     /**
