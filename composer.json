@@ -3,7 +3,6 @@
     "description": "Laravel Auditor Package",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "OdilovSh\\LaravelAuditTm\\": "src/"
