@@ -1,0 +1,22 @@
+{
+    "name": "odilov-sh/laravel-audit-tm",
+    "description": "Laravel Auditor Package",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "OdilovSh\\LaravelAuditTm\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OdilovSh\\LaravelAuditTm\\AuditTmServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "seshpulatov/auth-tm": "dev-main"
+    }
+}
