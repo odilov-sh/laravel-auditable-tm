@@ -30,12 +30,6 @@ composer require laravel-audit-tm/audit
 ```shell
 php artisan vendor:publish --provider="OdilovSh\LaravelAuditTm\AuditTmServiceProvider"
 ```
-### Migration
-
-```shell
-php artisan migrate
-```
-See `config/audit-tm.php` for configuration options.
 ### Usage
 
 ```php

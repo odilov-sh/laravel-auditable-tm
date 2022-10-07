@@ -10,8 +10,7 @@ class AuditTmServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/audit-tm.php' => config_path('audit-tm.php'),
-            __DIR__.'/../database/migrations' => database_path('migrations'),
+            __DIR__.'/../config/audit-tm.php' => config_path('audit-tm.php')
         ]);
     }
 
