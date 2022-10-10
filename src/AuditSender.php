@@ -52,7 +52,8 @@ class AuditSender
 
         $result = json_decode($result, true);
 
-        if (!$result['status']) {
+        $status = $result['status'] ?? false;
+        if (!$status) {
             session()->flash('error', "Audit error: {$result['message']}");
         }
     }

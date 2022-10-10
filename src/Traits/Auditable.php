@@ -2,6 +2,7 @@
 
 namespace OdilovSh\LaravelAuditTm\Traits;
 
+use App;
 use OdilovSh\LaravelAuditTm\AuditSender;
 use OdilovSh\LaravelAuditTm\Getters\Getter;
 
@@ -74,6 +75,11 @@ trait Auditable
      */
     public function isEventAuditable(string $event): bool
     {
+
+        if (App::runningInConsole() && !config('audit-tm.console')) {
+            return false;
+        }
+
         $events = config('audit-tm.events', []);
         return in_array($event, $events);
     }
