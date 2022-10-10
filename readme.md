@@ -52,4 +52,4 @@ AUDIT_TM_ENABLED=true // if false, audit will not be sent
 AUDIT_TM_RECEIVER_URL="your receiver url"
 ```
 ### Notes
-This package uses `OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver` to resolve the user id. You can change the resolver by changing the `user_id_resolver` in the `audit-tm` config file.
+This package uses `OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver` to resolve the user id. You can change the resolver by changing the `user_id_resolver` in the `audit-tm` config file. As well you can set `false` this configuration. In this case `user_id` value will not be sent. 
