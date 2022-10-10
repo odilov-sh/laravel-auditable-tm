@@ -8,7 +8,7 @@ class UserIdResolver implements Resolver
 {
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public static function resolve()
     {

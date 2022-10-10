@@ -4,7 +4,7 @@ return [
 
     'service_id' => env('AUTH_SERVICE_ID'),
     'enabled' => env('AUDIT_TM_ENABLED', true),
-    'receiver_url' => env('AUDIT_TM_RECEIVER_URL'),
+    'receiver_url' => env('AUDIT_TM_BASE_URL'),
     'secret_key' => env('AUDIT_TM_SECRET_KEY'),
     'user_id_resolver' => \OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver::class,
     'getters' => [

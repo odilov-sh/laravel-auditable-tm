@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
 
-    use OdilovSh\LaravelAuditTm\Auditable;
+    use OdilovSh\LaravelAuditTm\Traits\Auditable;
 
 }
 ```
@@ -49,7 +49,7 @@ Your .env file must have the following variables:
 AUTH_SERVICE_ID=1111
 AUDIT_TM_SECRET_KEY="your secret key"
 AUDIT_TM_ENABLED=true // if false, audit will not be sent
-AUDIT_TM_RECEIVER_URL="your receiver url"
+AUDIT_TM_BASE_URL="audit receiver base url"
 ```
 ### Notes
 This package uses `OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver` to resolve the user id. You can change the resolver by changing the `user_id_resolver` in the `audit-tm` config file. As well you can set `false` this configuration. In this case `user_id` value will not be sent. 

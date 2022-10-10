@@ -2,6 +2,7 @@
 
 namespace OdilovSh\LaravelAuditTm;
 
+use Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\App;
 use OdilovSh\LaravelAuditTm\Resolvers\Resolver;
@@ -28,7 +29,7 @@ class AuditSender
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function resolveUserId()
     {
@@ -42,18 +43,16 @@ class AuditSender
      */
     public function send()
     {
-        $url = config('audit-tm.receiver_url');
-        $result = \Http::withHeaders([
-            'Authorization' => 'Bearer ' . config('audit-tm.secret_key'),
-        ])
+        $url = config('audit-tm.receiver_url') . '/api/audit-receive';
+        $token = config('audit-tm.secret_key');
+        $result = Http::withToken($token)
             ->acceptJson()
             ->get($url, $this->data)
-            ->body()
-        ;
+            ->body();
 
         $result = json_decode($result, true);
 
-        if (!$result['status'] ) {
+        if (!$result['status']) {
             session()->flash('error', "Audit error: {$result['message']}");
         }
     }
