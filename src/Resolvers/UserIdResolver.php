@@ -12,7 +12,7 @@ class UserIdResolver implements Resolver
      */
     public static function resolve()
     {
-        return AuthTM::user()['id'];
+        return AuthTM::user()->id ?? null;
     }
 
 }
