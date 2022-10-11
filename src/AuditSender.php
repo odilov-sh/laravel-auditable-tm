@@ -47,15 +47,34 @@ class AuditSender
         $token = config('audit-tm.secret_key');
         $result = Http::withToken($token)
             ->acceptJson()
-            ->get($url, $this->data)
+            ->post($url, $this->data)
             ->body();
+
+        if (empty($result)) {
+            $this->error('Audit receiver response is empty.');
+            return;
+        }
 
         $result = json_decode($result, true);
 
+        if (!is_array($result)) {
+            $this->error('Audit receiver response is not a valid json.');
+            return;
+        }
+
         $status = $result['status'] ?? false;
         if (!$status) {
-            session()->flash('error', "Audit error: {$result['message']}");
+            $this->error($result['message'] ?? 'Audit receiver response status is false and no message.');
         }
+    }
+
+    /**
+     * @param string $message
+     * @return void
+     */
+    private function error(string $message)
+    {
+        session()->flash('error', "AUDIT ERROR! " . $message);
     }
 
 }
