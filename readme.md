@@ -23,7 +23,7 @@ If you use the `Astrotomic\Translatable\Translatable` trait, the package will al
 ### Installation
 
 ```shell
-composer require laravel-audit-tm/audit
+composer require odilov-sh/laravel-audit-tm
 ```
 ### Publishing
     
