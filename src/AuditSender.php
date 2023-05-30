@@ -3,9 +3,10 @@
 namespace OdilovSh\LaravelAuditTm;
 
 use Http;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Request;
 use OdilovSh\LaravelAuditTm\Resolvers\Resolver;
+use Illuminate\Support\Facades\Log;
 
 class AuditSender
 {
@@ -45,26 +46,13 @@ class AuditSender
     {
         $url = config('audit-tm.receiver_url') . '/api/audit-receive';
         $token = config('audit-tm.secret_key');
+
         $result = Http::withToken($token)
             ->acceptJson()
-            ->post($url, $this->data)
-            ->body();
+            ->post($url, $this->data);
 
-        if (empty($result)) {
-            $this->error('Audit receiver response is empty.');
-            return;
-        }
-
-        $result = json_decode($result, true);
-
-        if (!is_array($result)) {
-            $this->error('Audit receiver response is not a valid json.');
-            return;
-        }
-
-        $status = $result['status'] ?? false;
-        if (!$status) {
-            $this->error($result['message'] ?? 'Audit receiver response status is false and no message.');
+        if (!$result->ok()) {
+            $this->error($result->json('message', 'Something went wrong with Audit Service'));
         }
     }
 
@@ -74,6 +62,7 @@ class AuditSender
      */
     private function error(string $message)
     {
+        Log::error($message);
         session()->flash('error', "AUDIT ERROR! " . $message);
     }
 
