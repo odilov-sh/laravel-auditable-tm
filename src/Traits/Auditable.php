@@ -179,7 +179,7 @@ trait Auditable
 
         if ($tags){
             if (is_array($tags)){
-                $tags = implode(',', $tags);
+                $tags = implode(', ', $tags);
             }
             $data['tags'] = $tags;
         }
