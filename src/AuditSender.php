@@ -4,9 +4,9 @@ namespace OdilovSh\LaravelAuditTm;
 
 use Http;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use OdilovSh\LaravelAuditTm\Resolvers\Resolver;
-use Illuminate\Support\Facades\Log;
 
 class AuditSender
 {
@@ -64,6 +64,15 @@ class AuditSender
     {
         Log::error($message);
         session()->flash('error', "AUDIT ERROR! " . $message);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    public static function sendToAudit(array $data): void
+    {
+        (new AuditSender($data))->send();
     }
 
 }

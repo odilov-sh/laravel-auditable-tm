@@ -8,7 +8,6 @@ use OdilovSh\LaravelAuditTm\Getters\Getter;
 
 trait Auditable
 {
-    use AuditHistory;
 
     /**
      * @return void
@@ -16,21 +15,28 @@ trait Auditable
     public static function bootAuditable()
     {
         static::created(function ($model) {
+
+            /** @var self $model */
             $model->audit('created');
         });
 
         static::saving(function ($model) {
+
+            /** @var self $model */
             if ($model->exists) {
                 $model->audit('updated');
             }
         });
 
         static::deleting(function ($model) {
+
+            /** @var self $model */
             $model->audit('deleted');
         });
     }
 
     /**
+     * These attributes are excluded on auditing
      * @return array
      */
     public function auditableExcludedAttributes(): array
@@ -39,11 +45,45 @@ trait Auditable
     }
 
     /**
+     * These attributes are always audited even if the attribute is excluded globally.
+     * @note You can globally exclude attributes in config/audit-tm.php in `exclude` section.
      * @return array
      */
     public function auditableAllowedAttributes(): array
     {
         return [];
+    }
+
+    /**
+     * Get auditable class name.
+     * Default the method returns class name of this object.
+     * You can override this method in your model.
+     * @return string
+     */
+    public function getAuditableClassName(): string
+    {
+        return get_class($this);
+    }
+
+    /**
+     * Get auditable id.
+     * Default the method returns value of 'key' attribute  of this object.
+     * You can override this method in your model.
+     * @return string|null
+     */
+    public function getAuditableId(): ?string
+    {
+        return (string)$this->getKey();
+    }
+
+    /**
+     * Get auditable tags.
+     * You can override this method in your model.
+     * @return string|array|null
+     */
+    public function getAuditableTags(): null|string|array
+    {
+        return null;
     }
 
     /**
@@ -127,12 +167,22 @@ trait Auditable
         if (!$this->shouldAuditValues($event, $newValues, $oldValues)) {
             return;
         }
+
         $data = [];
         $data['event'] = $event;
-        $data['auditable_type'] = get_class($this);
-        $data['auditable_id'] = $this->getKey();
+        $data['auditable_type'] = $this->getAuditableClassName();
+        $data['auditable_id'] = $this->getAuditableId();
         $data['old_values'] = $oldValues;
         $data['new_values'] = $newValues;
+
+        $tags = $this->getAuditableTags();
+
+        if ($tags){
+            if (is_array($tags)){
+                $tags = implode(',', $tags);
+            }
+            $data['tags'] = $tags;
+        }
 
         (new AuditSender($data))->send();
 
