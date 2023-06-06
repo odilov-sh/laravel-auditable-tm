@@ -3,16 +3,14 @@
 This package provides a simple way to audit your Eloquent models.
 The package collects the following information:
 
-- `service_id` - The service ID of the service that is using the package
+- `service_id` - The ID of the service that is using the package
 - `user_id` - The user who performed the action
-- `event` - The event that was performed. The package supports the following events:
-    - `created`
-    - `updated`
-    - `deleted`
-- `auditable_type` - The class name of the auditable model
-- `auditable_id` - The ID of the auditable model
+- `event` - The event that was performed.
+- `auditable_type` - The class name of the auditable model. Defaults to model class name. You can override 'getAuditableClassName()' in your model.
+- `auditable_id` - The ID of the auditable model. You can override 'getAuditableId()' in your model.
 - `old_values` - The old values of the auditable model
 - `new_values` - The new values of the auditable model
+- `tags` - Additional tags. You can override 'getAuditableTags()' in your model.
 - `url` - The URL of the request
 - `ip_address` - The IP address of the request
 - `user_agent` - The user agent of the request
