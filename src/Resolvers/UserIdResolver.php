@@ -2,8 +2,6 @@
 
 namespace OdilovSh\LaravelAuditTm\Resolvers;
 
-use Seshpulatov\AuthTm\AuthTM;
-
 class UserIdResolver implements Resolver
 {
 
@@ -12,15 +10,15 @@ class UserIdResolver implements Resolver
      */
     public static function resolve()
     {
-        try {
-            $user = AuthTM::user();
-            if ($user){
-                return $user->id;
+
+        if(class_exists('\Seshpulatov\AuthTm\AuthTM')){
+
+            try {
+                return  \Seshpulatov\AuthTm\AuthTM::userId();
             }
+            catch (\Exception $exception){}
         }
-        catch (\Exception $exception){
-            return null;
-        }
+
         return null;
     }
 
