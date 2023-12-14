@@ -78,6 +78,13 @@ $data['new_values'] = [
 (new AuditSender($data))->send();
 ```
 
+### Queue
+You can use queue job to send auditing data to audit server. In this case, you will not wait sending request to audit server and getting response. All of processes will be done in background. To use queue, you just need add new configs to env file
+```dotenv
+AUDIT_TM_QUEUE_IS_ENABLED=true
+AUDIT_TM_ON_QUEUE=default
+```
+
 ### Notes
 This package uses `OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver` to resolve the user id. You can change the resolver by changing the `user_id_resolver` in the `audit-tm` config file. As well you can set `false` this configuration. In this case `user_id` value will not be sent. 
 
