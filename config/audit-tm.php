@@ -67,5 +67,6 @@ return [
     | If true, the auditing data will be sent using queueu. (not primarily)
     |
     */
-    'queue'   => env('AUDIT_TM_QUEUE', false)
+    'queue_is_enabled'   => env('AUDIT_TM_QUEUE_IS_ENABLED', false),
+    'on_queue'   => env('AUDIT_TM_ON_QUEUE'),
 ];
