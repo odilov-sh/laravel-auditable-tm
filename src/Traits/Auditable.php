@@ -212,8 +212,8 @@ trait Auditable
      */
     protected function sendToAudit(array $data)
     {
-        if (config('audit-tm.queue')) {
-            AuditSenderJob::dispatch($data)->onQueue('local');
+        if (config('audit-tm.queue_is_enabled')) {
+            AuditSenderJob::dispatch($data)->onQueue(config('audit-tm.on_queue'));
         } else {
             AuditSender::sendToAudit($data);
         }
