@@ -5,6 +5,7 @@ namespace OdilovSh\LaravelAuditTm\Traits;
 use App;
 use OdilovSh\LaravelAuditTm\AuditSender;
 use OdilovSh\LaravelAuditTm\Getters\Getter;
+use OdilovSh\LaravelAuditTm\Jobs\AuditSenderJob;
 
 trait Auditable
 {
@@ -177,15 +178,28 @@ trait Auditable
 
         $tags = $this->getAuditableTags();
 
-        if ($tags){
-            if (is_array($tags)){
+        if ($tags) {
+            if (is_array($tags)) {
                 $tags = implode(', ', $tags);
             }
             $data['tags'] = $tags;
         }
 
-        (new AuditSender($data))->send();
+        $this->sendToAudit($data);
 
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    protected function sendToAudit(array $data)
+    {
+        if (config('audit-tm.queue')) {
+            AuditSenderJob::dispatch($data);
+        } else {
+            (new AuditSender($data))->send();
+        }
     }
 
     /**
