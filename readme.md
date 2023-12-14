@@ -28,6 +28,15 @@ composer require odilov-sh/laravel-audit-tm
 ```shell
 php artisan vendor:publish --provider="OdilovSh\LaravelAuditTm\AuditTmServiceProvider"
 ```
+### Envirement variables
+Your .env file must have the following variables:
+```dotenv
+AUTH_SERVICE_ID=1111
+AUDIT_TM_SECRET_KEY="your secret key"
+AUDIT_TM_ENABLED=true // if false, audit will not be sent
+AUDIT_TM_BASE_URL="audit receiver base url"
+```
+
 ### Usage
 
 ```php
@@ -40,14 +49,35 @@ class Post extends Model
     use OdilovSh\LaravelAuditTm\Traits\Auditable;
 
 }
+
 ```
-### Envirement variables
-Your .env file must have the following variables:
-```dotenv
-AUTH_SERVICE_ID=1111
-AUDIT_TM_SECRET_KEY="your secret key"
-AUDIT_TM_ENABLED=true // if false, audit will not be sent
-AUDIT_TM_BASE_URL="audit receiver base url"
+
+The Auditable trait will automatically send data to audit server on `updated`, `created` and `deleted` events. In other cases, you must send data manually. Manually send data might be like this:
+
+```php
+
+// Manually send data to audit server
+
+use OdilovSh\LaravelAuditTm\AuditSender;
+
+$data = [];
+$data['event'] = 'changeStatus'; // Event name
+$data['auditable_type'] = 'App\Models\Product'; // The name of the class being audited
+$data['auditable_id'] = 123; // The id of the model being audited
+
+// Old values before changing
+$data['old_values'] = [
+    'status' => 'active'
+];
+
+// New values after changing
+$data['new_values'] = [
+    'status' => 'inactive'
+];
+
+(new AuditSender($data))->send();
 ```
+
 ### Notes
 This package uses `OdilovSh\LaravelAuditTm\Resolvers\UserIdResolver` to resolve the user id. You can change the resolver by changing the `user_id_resolver` in the `audit-tm` config file. As well you can set `false` this configuration. In this case `user_id` value will not be sent. 
+
