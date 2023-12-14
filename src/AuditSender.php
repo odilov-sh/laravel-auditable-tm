@@ -3,9 +3,7 @@
 namespace OdilovSh\LaravelAuditTm;
 
 use Http;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 use OdilovSh\LaravelAuditTm\Resolvers\Resolver;
 
 class AuditSender
@@ -21,22 +19,7 @@ class AuditSender
      */
     public function __construct(array $data)
     {
-        $data['service_id'] = config('audit-tm.service_id');
-        $data['user_id'] = $this->resolveUserId();
-        $data['user_agent'] = Request::header('User-Agent');
-        $data['ip_address'] = Request::ip();
-        $data['url'] = App::runningInConsole() ? 'console' : Request::fullUrl();
         $this->data = $data;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function resolveUserId()
-    {
-        /** @var Resolver $resolver */
-        $resolver = config('audit-tm.user_id_resolver');
-        return $resolver ? $resolver::resolve() : null;
     }
 
     /**

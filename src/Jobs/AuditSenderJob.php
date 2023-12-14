@@ -35,7 +35,7 @@ class AuditSenderJob implements ShouldQueue
      */
     public function handle(): void
     {
-        (new AuditSender($this->data))->send();
+        AuditSender::sendToAudit($this->data);
     }
 
     /**

@@ -3,9 +3,11 @@
 namespace OdilovSh\LaravelAuditTm\Traits;
 
 use App;
+use Illuminate\Support\Facades\Request;
 use OdilovSh\LaravelAuditTm\AuditSender;
 use OdilovSh\LaravelAuditTm\Getters\Getter;
 use OdilovSh\LaravelAuditTm\Jobs\AuditSenderJob;
+use OdilovSh\LaravelAuditTm\Resolvers\Resolver;
 
 trait Auditable
 {
@@ -175,6 +177,11 @@ trait Auditable
         $data['auditable_id'] = $this->getAuditableId();
         $data['old_values'] = $oldValues;
         $data['new_values'] = $newValues;
+        $data['user_agent'] = Request::header('User-Agent');
+        $data['ip_address'] = Request::ip();
+        $data['url'] = \Illuminate\Support\Facades\App::runningInConsole() ? 'console' : Request::fullUrl();
+        $data['service_id'] = config('audit-tm.service_id');
+        $data['user_id'] = $this->resolveUserId();
 
         $tags = $this->getAuditableTags();
 
@@ -190,15 +197,25 @@ trait Auditable
     }
 
     /**
+     * @return int|null
+     */
+    public function resolveUserId()
+    {
+        /** @var Resolver $resolver */
+        $resolver = config('audit-tm.user_id_resolver');
+        return $resolver ? $resolver::resolve() : null;
+    }
+
+    /**
      * @param array $data
      * @return void
      */
     protected function sendToAudit(array $data)
     {
         if (config('audit-tm.queue')) {
-            AuditSenderJob::dispatch($data);
+            AuditSenderJob::dispatch($data)->onQueue('local');
         } else {
-            (new AuditSender($data))->send();
+            AuditSender::sendToAudit($data);
         }
     }
 
