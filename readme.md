@@ -79,7 +79,7 @@ $data['new_values'] = [
 ```
 
 ### Queue
-You can use queue job to send auditing data to audit server. In this case, you will not wait sending request to audit server and getting response. All of processes will be done in background. To use queue, you just need add new configs to env file
+You can use queue job to send auditing data to audit server. In this case, you will not wait sending request to audit server and getting response. All of processes will be done in background. To use queue, first you must configure queue settings in Laravel. Then you just need add new configs to env file
 ```dotenv
 AUDIT_TM_QUEUE_IS_ENABLED=true
 AUDIT_TM_ON_QUEUE=default
